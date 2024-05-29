@@ -263,8 +263,8 @@ $(window).on("load", function () {
       sourcelink = "Media Credit Link"
       medialink = "Media Link"
 
-      sourcename2 = "Services Media Credit"
-      sourcelink2 = "Services Media Credit Link"
+      sourcename2 = "Media Credit 2"
+      sourcelink2 = "Media Credit Link 2"
       medialink2 = "Media Link 2"
 
       // Add media source
