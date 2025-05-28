@@ -233,80 +233,85 @@ h2 {
 
 #search-bar {
   position: fixed;
+  top: 20px;
+  right: 20px;
   width: auto;
   z-index: 1000;
-  padding: 5px 0;
-  /* Adjust padding as needed */
   display: flex;
-  /* Use Flexbox to align items horizontally */
-  justify-content: flex-start;
-  /* Align items to the left */
   align-items: center;
-  /* Center items vertically */
-  left: 0;
-  /* Align to the left side */
-  top: 5px;
-  /* Add some top margin */
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+#search-bar:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
 }
 
 .search-bar {
   position: relative;
   display: flex;
-  /* Use Flexbox to align items horizontally */
   align-items: center;
-  /* Ensure elements are centered vertically */
   background-color: transparent;
-  /* Make background transparent */
   margin: 0;
-  /* Remove margin */
   padding: 0;
-  /* Remove padding */
 }
 
 #box {
   display: flex;
-  /* Use Flexbox to align items horizontally */
   align-items: center;
-  /* Ensure elements are centered vertically */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Add box-shadow */
+  border-radius: 25px;
+  overflow: hidden;
 }
 
 #box input[type="text"] {
-  flex: 1;
-  /* Take up remaining space */
-  padding: 10px 15px;
-  /* Adjust padding for height and to reduce space */
-  font-size: 18px;
-  /* Increased font size */
+  width: 250px;
+  height: 45px;
+  padding: 0 20px;
+  font-size: 16px;
   border: none;
-  /* Remove all borders */
-  border-bottom: 2px solid #444;
-  /* Add bottom border */
-  background-color: rgba(255, 255, 255, 0.8);
-  /* Slightly transparent background */
-  color: #444;
-  /* Text color */
-  border-radius: 4px 0 0 4px;
-  /* Rounded corners on the left side */
+  background-color: transparent;
+  color: #333;
+  outline: none;
+  font-family: "Helvetica", sans-serif;
+  transition: width 0.3s ease;
+}
+
+#box input[type="text"]:focus {
+  width: 300px;
+}
+
+#box input[type="text"]::placeholder {
+  color: #888;
+  font-style: italic;
 }
 
 #magnifying {
   display: flex;
   align-items: center;
-  padding: 0 5px;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
   cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  margin-right: 5px;
+}
 
+#magnifying:hover {
+  background-color: rgba(0, 123, 255, 0.1);
 }
 
 #magnifying .fa-search {
-  color: #2207ec;
-  /* Darker color for better visibility */
-  font-size: 24px;
-  /* Increased icon size */
+  color: #007bff;
+  font-size: 18px;
+  transition: all 0.3s ease;
 }
 
 #magnifying .fa-search:hover {
-  color: #000;
-  /* Change color on hover for better feedback */
+  color: #0056b3;
+  transform: scale(1.1);
 }
