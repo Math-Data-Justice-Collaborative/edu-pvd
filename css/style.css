@@ -6,7 +6,7 @@ body {
 }
 
 #map {
-  height: 200px;
+  height: 250px;
   width: 100vw;
   position: absolute;
   border-bottom: 3px solid orange;
@@ -16,9 +16,9 @@ body {
 
 #narration {
   position: absolute;
-  top: 203px;
+  top: 253px;
   width: 100vw;
-  height: calc(100vh - 203px);
+  height: calc(100vh - 253px);
   z-index: 80;
 }
 
@@ -48,7 +48,7 @@ body {
 #title {
   position: absolute;
   left: 0;
-  top: 203px;
+  top: 253px;
   background-color: white;
   width: 100vw;
   z-index: 100;
@@ -159,10 +159,7 @@ a.source:visited {
   opacity: 0.75;
 }
 
-/*
-  By default, current (active) marker is orange.
-  If you want to change the color, see options here: https://github.com/coryasilva/Leaflet.ExtraMarkers/blob/master/src/assets/css/leaflet.extra-markers.css
-*/
+
 .marker-active {
   background-position: -72px 0 !important;
 }
@@ -233,8 +230,8 @@ h2 {
 
 #search-bar {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 25px;
+  right: 25px;
   width: auto;
   z-index: 1000;
   display: flex;
@@ -268,10 +265,10 @@ h2 {
 }
 
 #box input[type="text"] {
-  width: 250px;
-  height: 45px;
-  padding: 0 20px;
-  font-size: 16px;
+  width: 280px;
+  height: 50px;
+  padding: 0 25px;
+  font-size: 17px;
   border: none;
   background-color: transparent;
   color: #333;
@@ -281,7 +278,7 @@ h2 {
 }
 
 #box input[type="text"]:focus {
-  width: 300px;
+  width: 350px;
 }
 
 #box input[type="text"]::placeholder {
@@ -293,8 +290,8 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   cursor: pointer;
   border-radius: 50%;
   transition: all 0.3s ease;
@@ -307,11 +304,101 @@ h2 {
 
 #magnifying .fa-search {
   color: #007bff;
-  font-size: 18px;
+  font-size: 20px;
   transition: all 0.3s ease;
 }
 
 #magnifying .fa-search:hover {
   color: #0056b3;
   transform: scale(1.1);
+}
+
+/* Responsive Design for Search Bar */
+@media screen and (max-width: 767px) {
+  #search-bar {
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  #box input[type="text"] {
+    width: 180px;
+    height: 40px;
+    padding: 0 15px;
+    font-size: 14px;
+  }
+  
+  #box input[type="text"]:focus {
+    width: 220px;
+  }
+  
+  #magnifying {
+    width: 40px;
+    height: 40px;
+  }
+  
+  #magnifying .fa-search {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #search-bar {
+    top: 8px;
+    right: 8px;
+    border-radius: 20px;
+  }
+  
+  #box {
+    border-radius: 20px;
+  }
+  
+  #box input[type="text"] {
+    width: 140px;
+    height: 36px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+  
+  #box input[type="text"]:focus {
+    width: 180px;
+  }
+  
+  #magnifying {
+    width: 36px;
+    height: 36px;
+    margin-right: 3px;
+  }
+  
+  #magnifying .fa-search {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  #search-bar {
+    top: 25px;
+    right: 25px;
+  }
+  
+  #box input[type="text"] {
+    width: 280px;
+    height: 50px;
+    padding: 0 25px;
+    font-size: 17px;
+  }
+  
+  #box input[type="text"]:focus {
+    width: 350px;
+  }
+  
+  #magnifying {
+    width: 50px;
+    height: 50px;
+  }
+  
+  #magnifying .fa-search {
+    font-size: 20px;
+  }
 }
