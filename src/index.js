@@ -15,6 +15,11 @@ $(window).on("load", function () {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   });
+  // Ensure custom scrollbar element exists immediately so users can see a track/thumb
+  if (!document.getElementById('custom-scrollbar')) {
+    var $earlyCustom = $("<div id='custom-scrollbar'><div class='track'><div class='thumb'></div></div></div>");
+    $("body").append($earlyCustom);
+  }
   
 
   // Scroll event to update focus based on the first element in view
@@ -44,6 +49,26 @@ $(window).on("load", function () {
 
   // Some constants, such as default settings
   const CHAPTER_ZOOM = 15;
+
+  // Create up/down arrow buttons immediately so users can scroll before data loads
+  var $earlyUp = $("<button id='scroll-up' class='scroll-arrow up' title='Scroll up'>▲</button>");
+  var $earlyDown = $("<button id='scroll-down' class='scroll-arrow down' title='Scroll down'>▼</button>");
+  $("body").append($earlyUp).append($earlyDown);
+  $earlyUp.on('click', function() {
+    var $c = $("div#contents");
+    var view = $c.height();
+    var delta = -Math.max(200, view - 50);
+    var target = Math.max(0, $c.scrollTop() + delta);
+    $c.animate({ scrollTop: target }, 300);
+  });
+  $earlyDown.on('click', function() {
+    var $c = $("div#contents");
+    var view = $c.height();
+    var delta = Math.max(200, view - 50);
+    var max = $c[0] ? $c[0].scrollHeight - view : 0;
+    var target = Math.min(max, $c.scrollTop() + delta);
+    $c.animate({ scrollTop: target }, 300);
+  });
 
   // First, try reading Options.csv
   $.get("csv/Options.csv", function (options) {
@@ -588,6 +613,119 @@ $(window).on("load", function () {
 
     $("#map, #narration, #title").css("visibility", "visible");
     $("div.loader").css("visibility", "hidden");
+
+    
+
+    // Reference existing custom scrollbar UI (created earlier) or create if missing
+    var $custom = $("#custom-scrollbar");
+    if ($custom.length === 0) {
+      $custom = $("<div id='custom-scrollbar'><div class='track'><div class='thumb'></div></div></div>");
+      $("body").append($custom);
+    }
+
+    var $contents = $("div#contents");
+    var $track = $("#custom-scrollbar .track");
+    var $thumb = $("#custom-scrollbar .thumb");
+
+    function updateThumb() {
+      var viewH = $contents.height();
+      var contentH = $contents[0].scrollHeight;
+      var trackH = $track.height();
+      // Always show the thumb; when content doesn't overflow, make the thumb full-length
+      $thumb.show().css({ display: 'block', visibility: 'visible', opacity: 1 });
+      $track.show().css({ display: 'block', visibility: 'visible', opacity: 1 });
+      $custom.show().css({ display: 'block', visibility: 'visible', opacity: 1 });
+      if (contentH <= viewH) {
+        // no scroll necessary — show full-length thumb
+        $thumb.css({ height: trackH + 'px', top: '0px' });
+        return;
+      }
+      var thumbH = Math.max(30, Math.round((viewH / contentH) * trackH));
+      var maxThumbTop = trackH - thumbH;
+      var scrollTop = $contents.scrollTop();
+      var thumbTop = Math.round((scrollTop / (contentH - viewH)) * maxThumbTop);
+      $thumb.css({ height: thumbH + 'px', top: thumbTop + 'px' });
+    }
+
+    // Ensure scrollbar stays visible all the time
+    setInterval(function() {
+      $custom.css({ display: 'block', visibility: 'visible', opacity: 1 });
+      $track.css({ display: 'block', visibility: 'visible', opacity: 1 });
+      $thumb.css({ display: 'block', visibility: 'visible', opacity: 1 });
+    }, 500);
+
+    // Sync thumb on content scroll
+    $contents.on('scroll', updateThumb);
+    $(window).on('resize', updateThumb);
+
+    // Clicking the track moves the scroll position
+    $track.on('click', function(e) {
+      if (e.target === $thumb[0]) return; // ignore when clicking thumb
+      var offset = $track.offset().top;
+      var clickY = e.pageY - offset;
+      var trackH = $track.height();
+      var viewH = $contents.height();
+      var contentH = $contents[0].scrollHeight;
+      var ratio = clickY / trackH;
+      var targetScroll = Math.round(ratio * (contentH - viewH));
+      $contents.animate({ scrollTop: targetScroll }, 250);
+    });
+
+    // Dragging the thumb
+    (function() {
+      var dragging = false;
+      var startY = 0;
+      var startTop = 0;
+
+      $thumb.on('mousedown touchstart', function(e) {
+        e.preventDefault();
+        dragging = true;
+        startY = e.touches ? e.touches[0].pageY : e.pageY;
+        startTop = parseInt($thumb.css('top')) || 0;
+        $(document).on('mousemove.customThumb touchmove.customThumb', function(ev) {
+          if (!dragging) return;
+          var pageY = ev.touches ? ev.touches[0].pageY : ev.pageY;
+          var dy = pageY - startY;
+          var trackH = $track.height();
+          var thumbH = $thumb.height();
+          var maxTop = trackH - thumbH;
+          var newTop = Math.max(0, Math.min(maxTop, startTop + dy));
+          var ratio = newTop / maxTop;
+          var contentH = $contents[0].scrollHeight;
+          var viewH = $contents.height();
+          var targetScroll = Math.round(ratio * (contentH - viewH));
+          $contents.scrollTop(targetScroll);
+        });
+        $(document).on('mouseup.customThumb touchend.customThumb', function() {
+          dragging = false;
+          $(document).off('.customThumb');
+        });
+      });
+    })();
+
+    // Initial thumb sizing
+    updateThumb();
+
+    // Also update thumb after images load and after short delays to catch async layout changes
+    $contents.find('img').each(function() {
+      if (this.complete) return;
+      $(this).on('load', updateThumb);
+    });
+
+    // Retry updates shortly after load in case of late layout changes
+    setTimeout(updateThumb, 100);
+    setTimeout(updateThumb, 500);
+    setTimeout(updateThumb, 1000);
+
+    // Use a MutationObserver to detect content changes and update thumb
+    try {
+      var observer = new MutationObserver(function() {
+        updateThumb();
+      });
+      observer.observe($contents[0], { childList: true, subtree: true, attributes: true });
+    } catch (e) {
+      // MutationObserver not supported; ignore
+    }
 
     $("div#container0").addClass("in-focus");
     $("div#contents").animate({ scrollTop: "1px" });

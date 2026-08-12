@@ -11,6 +11,7 @@
 
     <!-- Aggressive scrollbar visibility enforcement - load FIRST -->
     <script src="scrollbar-fix.js"></script>
+
     <!-- Load Leaflet CSS and JS-->
     <link
       rel="stylesheet"
@@ -65,34 +66,8 @@
 
     <div class="loader">Loading...</div>
     <div id="map"></div>
-    <div id="search-bar">
-      <div id="box">
-        <input type="text" id="search-input" placeholder="Search...">
-      </div>
-      <div id="magnifying">
-        <i class="fa fa-search"></i>
-      </div>
+    <div id="search-bar" style="display: none">
+      <input type="text" id="search-input" placeholder="Search...">
     </div>
-
-    <script type="text/javascript">
-      // Create the Leaflet map with a generic start point
-      var map = L.map("map", {
-        center: [0, 0],
-        zoom: 1,
-        scrollWheelZoom: false,
-        zoomControl: false,
-        tap: false,
-      });
-    </script>
-
-    <!-- <script type="text/javascript" src="google-doc-url.js"></script> -->
-
-    <script
-      type="text/javascript"
-      src="markers/leaflet.extra-markers.min.js"
-    ></script>
-    <script type="text/javascript" src="scripts/constants.js"></script>
-    <script type="text/javascript" src="scripts/jquery.csv.js"></script>
-    <!-- <script type="text/javascript" src="scripts/storymap.js"></script> -->
   </body>
 </html>
