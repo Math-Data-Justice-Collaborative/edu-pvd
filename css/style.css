@@ -51,7 +51,7 @@ body {
   top: 203px;
   background-color: white;
   width: 100vw;
-  z-index: 100;
+  z-index: 90;
   margin: 0;
   padding: 0;
   visibility: hidden;
@@ -59,6 +59,126 @@ body {
   font-style: italic;
   text-align: center;
 }
+
+/* Allow pointer events to pass through the title element so the
+   scrollbar (and its arrows) remain clickable when the title is shown/hidden. */
+#title {
+  pointer-events: none;
+}
+
+/* Scroll arrow buttons placed near the right edge to jump up/down */
+.scroll-arrow {
+  position: fixed;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  border: 2px solid #222;
+  background: #555;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 38px;
+  text-align: center;
+  z-index: 1000000001;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.6);
+  pointer-events: auto;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.scroll-arrow:hover { background: #333; transform: scale(1.08); }
+.scroll-arrow:active { background: #222; }
+.scroll-arrow.up { top: 215px; }
+.scroll-arrow.down { bottom: 15px; }
+
+/* On small screens, move arrows slightly left so they don't overlap native scrollbars */
+@media (max-width: 600px) {
+  .scroll-arrow { right: 6px; }
+}
+
+/* Custom scrollbar for #contents so a visible track/thumb is always present */
+#contents {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(0,0,0,0.25) rgba(0,0,0,0.05);
+}
+
+#contents::-webkit-scrollbar {
+  width: 12px;
+}
+#contents::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+  border-radius: 6px;
+}
+#contents::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.25);
+  border-radius: 6px;
+}
+#contents:hover::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.45);
+}
+
+#custom-scrollbar {
+  /* Sit on top of the title/header layer so it stays present and clickable */
+  position: fixed;
+  right: 3px;
+  top: 203px;
+  width: 22px;
+  height: calc(100vh - 203px);
+  z-index: 1000000000;
+  pointer-events: auto;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: none !important;
+  transition: none !important;
+  transform: translateZ(0) !important;
+}
+#custom-scrollbar .track {
+  position: absolute;
+  right: 1px;
+  top: 8px;
+  bottom: 8px;
+  width: 18px;
+  margin: 0 auto;
+  background: rgba(120, 120, 120, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(80, 80, 80, 0.6);
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  animation: none !important;
+  transition: none !important;
+}
+#custom-scrollbar .thumb {
+  position: absolute;
+  left: 3px;
+  width: 12px;
+  height: 50px;
+  background: rgba(70, 70, 70, 0.95);
+  border-radius: 6px;
+  cursor: grab;
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  border: 1px solid rgba(40, 40, 40, 0.7);
+  min-height: 40px;
+  animation: none !important;
+  transition: none !important;
+}
+
+#custom-scrollbar .thumb:hover { background: rgba(50, 50, 50, 1); cursor: grabbing; }
+#custom-scrollbar .thumb:active { background: rgba(30, 30, 30, 1); cursor: grabbing; }
+
+
+/* Prevent jQuery show/hide from affecting custom scrollbar */
+#custom-scrollbar:not(:visible) { display: block !important; }
+#custom-scrollbar[style*="display: none"] { display: block !important; }
+#custom-scrollbar.hide { display: block !important; }
+#custom-scrollbar.hidden { display: block !important; }
 
 .chapter-container {
   /* margin + padding = chapterContainerMargin in script.js */
@@ -127,13 +247,28 @@ body {
 }
 
 .source {
-  font-size: 13pt;
-  font-style: italic;
-  color: gray;
+  display: inline-block;
+  font-size: 12pt;
+  font-style: normal;
+  color: #2d3c4d;
+  background: #eaf3ff;
+  border: 1px solid #b7cfe8;
+  border-radius: 99px;
+  padding: 6px 12px;
+  text-decoration: none;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-top: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.source:hover {
+  background: #dfeeff;
+  border-color: #9ab9df;
 }
 
 a.source:visited {
-  color: grey;
+  color: #2d3c4d;
 }
 
 .description {
@@ -160,11 +295,12 @@ a.source:visited {
 }
 
 /*
-  By default, current (active) marker is orange.
-  If you want to change the color, see options here: https://github.com/coryasilva/Leaflet.ExtraMarkers/blob/master/src/assets/css/leaflet.extra-markers.css
+  By default, current (active) marker was orange.
+  Changed to light-blue (cyan) sprite from Leaflet.ExtraMarkers.
+  See options here: https://github.com/coryasilva/Leaflet.ExtraMarkers/blob/master/src/assets/css/leaflet.extra-markers.css
 */
 .marker-active {
-  background-position: -72px 0 !important;
+  background-position: -216px 0 !important;
 }
 
 /* Storymap logo image above the title */
